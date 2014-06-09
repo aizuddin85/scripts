@@ -372,12 +372,14 @@ echo
 if [[ $EUID -eq 0 ]];
 then
 
+echo 
+echo -e "Running as Super User"
 #Disclaimer Note
-disclaimerNote
+#disclaimerNote
 
-read -p "Agree and want to continue (yes/no)? " ANSWER
-if [[ $ANSWER == "yes" ]]
-then
+#read -p "Agree and want to continue (yes/no)? " ANSWER
+#if [[ $ANSWER == "yes" ]]
+#then
 
 #RHEL Version Verification - RHEL5 Only Allowed
 releaseCheck
@@ -448,14 +450,14 @@ verifyDaemon
 footNote
 
 
-elif [[ $ANSWER == "no" ]]
-then
-echo
-echo "Terminated!"
-exit 1
-else
-echo "Please answer yes or no"
-fi
+#elif [[ $ANSWER == "no" ]]
+#then
+#echo
+#echo "Terminated!"
+#exit 1
+#else
+#echo "Please answer yes or no"
+#fi
 
 else
 echo "Run this script as root" $(failure)
