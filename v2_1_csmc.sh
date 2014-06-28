@@ -36,9 +36,6 @@ echo "Make sure you understand below statements/rules correctly:"
 echo
 echo -e "1. Prior to the script execution, make sure all config files transferred to the same directory with this script."
 echo -e "2. Compare CSMC Gateway IP in this script (in VARIABLES segment) with what is provided in the change in case its different."
-echo -e "3. \033[01;31mROOT USER\033[00;00m: With Great Power Comes Great Responsibility."
-echo -e "4. Ask if you feel unsure!"
-echo -e "5. Do the right thing. It will gratify some people and astonish the rest."
 
 }
 
