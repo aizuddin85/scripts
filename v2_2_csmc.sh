@@ -23,8 +23,8 @@ AMERICASDOM="@x.x.x.x"
 EUROPEDOM="@x.x.x.x"
 AFRICAMEDOM="@x.x.x.x"
 DIR=`pwd`
-SMTP=
-MAIL=
+SMTP=''
+MAIL=''
 LOG="/tmp/csmc_install.log"
 
 ################################# FUNCTIONS START ######################################
@@ -64,22 +64,22 @@ echo "++++ VERIFYING CONFIG FILES PRESENCE ++++"
 echo
 if [[ -z $AUDISPD ]]
  then
- echo "Missing -a input : EXITING"      $(failure)
+ echo "Missing -a input : EXITING" $(failure)
  echo "For usage: $0 -h for help"
  exit 1
                 elif [[ -z $PLUGSYSLOG ]]
                 then
-                echo "-p missing input : EXITING"       $(failure)
+                echo "-p missing input : EXITING" $(failure)
                 echo "For usage: $0 -h for help"
                 exit 1
                         elif [[ -z $AUDITD ]]
                         then
-                        echo "-d missing input : EXITING"       $(failure)
+                        echo "-d missing input : EXITING" $(failure)
                         echo "For usage: $0 -h for help"
                         exit 1
                                 elif [[ -z $AUDITRULES ]]
                                 then
-                                echo "-r missing input : EXITING"       $(failure)
+                                echo "-r missing input : EXITING" $(failure)
                                 echo "For usage: $0 -h for help"
                                 exit 1
 fi
@@ -87,18 +87,18 @@ fi
 
 #########################################################################################
 function preBackup () {
-echo "++++ PRE-INSTALLATION BACKUP ++++" 
+echo "++++ PRE-INSTALLATION BACKUP ++++"
 echo "Pre-Installation Backup" >> $LOG
 ls -lrt /etc/audisp/audispd.conf >> $LOG
 
 if [ -a /etc/audisp/audispd.conf ]
 then
         cp -p /etc/audisp/audispd.conf /etc/audisp/audispd.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
-        if  [ $? == 0 ]
+        if [ $? == 0 ]
         then
-        echo "Making backup for /etc/audisp/audispd.conf  ..."  $(success)
+        echo "Making backup for /etc/audisp/audispd.conf ..." $(success)
         else
-        echo "Failed to backup  /etc/audisp/audispd.conf!"              $(failure)
+        echo "Failed to backup /etc/audisp/audispd.conf!" $(failure)
         fi
 fi
 
@@ -107,11 +107,11 @@ ls -lrt /etc/audisp/plugins.d/syslog.conf >> $LOG
 if [ -a /etc/audisp/plugins.d/syslog.conf ]
 then
         cp -p /etc/audisp/plugins.d/syslog.conf /etc/audisp/plugins.d/syslog.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
-        if  [ $? == 0 ]
+        if [ $? == 0 ]
         then
-        echo "Making backup for /etc/audisp/plugins.d/syslog.conf ..."          $(success)
+        echo "Making backup for /etc/audisp/plugins.d/syslog.conf ..." $(success)
         else
-        echo "Failed to backup /etc/audisp/plugins.d/syslog.conf!"              $(failure)
+        echo "Failed to backup /etc/audisp/plugins.d/syslog.conf!" $(failure)
         fi
 fi
 
@@ -119,11 +119,11 @@ ls -lrt /etc/audit/auditd.conf >> $LOG
 if [ -a /etc/audit/auditd.conf ]
 then
         cp -p /etc/audit/auditd.conf /etc/audit/auditd.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
-        if  [ $? == 0 ]
+        if [ $? == 0 ]
         then
-        echo "Making backup for /etc/audit/auditd.conf  ..."           $(success)
+        echo "Making backup for /etc/audit/auditd.conf ..." $(success)
         else
-        echo "Failed to backup /etc/audit/auditd.conf!"          $(failure)
+        echo "Failed to backup /etc/audit/auditd.conf!" $(failure)
         fi
 fi
 
@@ -132,11 +132,11 @@ ls -lrt /etc/audit/audit.rules >> $LOG
 if [ -a /etc/audit/audit.rules ]
 then
         cp -p /etc/audit/audit.rules /etc/audit/audit.rules.bak-CSMC-`hostname`-`date +%H-%M-%S`
-        if  [ $? == 0 ]
+        if [ $? == 0 ]
         then
-        echo "Making backup for /etc/audit/audit.rules  ..."           $(success)
+        echo "Making backup for /etc/audit/audit.rules ..." $(success)
         else
-        echo "Failed to backup /etc/audit/audit.rules!"          $(failure)
+        echo "Failed to backup /etc/audit/audit.rules!" $(failure)
         fi
 fi
 
@@ -145,11 +145,11 @@ ls -lrt /etc/syslog.conf >> $LOG
 if [ -a /etc/syslog.conf ]
 then
         cp -p /etc/syslog.conf /etc/syslog.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
-        if  [ $? == 0 ]
+        if [ $? == 0 ]
         then
-        echo "Making backup for /etc/syslog.conf  ..."           $(success)
+        echo "Making backup for /etc/syslog.conf ..." $(success)
         else
-        echo "Failed to backup /etc/syslog.conf!"          $(failure)
+        echo "Failed to backup /etc/syslog.conf!" $(failure)
         fi
 fi
 
@@ -167,19 +167,19 @@ echo
 echo "Package Installation.." >> $LOG
 echo "++++ PACKAGES INSTALLATION ++++"
 rpm -qa|grep "audit-1.8" > /dev/null 2>&1
-if  [ $? -gt 0 ]
+if [ $? -gt 0 ]
 then
 yum install -y audispd-plugins
 else
-echo "audispd-plugins package already installed. Skipping ..."  $(success)
+echo "audispd-plugins package already installed. Skipping ..." $(success)
 fi
 
 rpm -qa|grep "psacct" > /dev/null 2>&1
-if  [ $? -gt 0 ]
+if [ $? -gt 0 ]
 then
 yum install -y psacct
 else
-echo "psacct package already installed. Skipping ..."  $(success)
+echo "psacct package already installed. Skipping ..." $(success)
 fi
 
 chkconfig psacct on
@@ -194,7 +194,7 @@ fi
 function preconfigBackup () {
 
 echo
-echo "Pre-config Backup.."  >> $LOG
+echo "Pre-config Backup.." >> $LOG
 echo "++++ PRE-CONFIG BACKUP ++++"
 cp -p /etc/audisp/audispd.conf /etc/audisp/audispd.conf_orig_`hostname`-`date +%H-%M-%S`
 cp -p /etc/audisp/plugins.d/syslog.conf /etc/audisp/plugins.d/syslog.conf_orig_`hostname`-`date +%H-%M-%S`
@@ -263,7 +263,7 @@ echo "++++ CONFIGURING SYSLOG CSMC GATEWAY ++++"
 cp -p /etc/syslog.conf.orig /etc/syslog.conf
 
 NAME=`hostname`
-DOMAIN=`nslookup $NAME  | grep Name | cut -d"." -f2`
+DOMAIN=`nslookup $NAME | grep Name | cut -d"." -f2`
 
 
 
@@ -274,10 +274,10 @@ echo "# Send a copy to CSMC Syslog Daemon" >> /etc/syslog.conf
 if [[ $DOMAIN == "asia-pac" ]]
 then
 
-echo "auth,authpriv.info;user,local4.debug                                      $ASIAPACDOM" >> /etc/syslog.conf
+echo "auth,authpriv.info;user,local4.debug $ASIAPACDOM" >> /etc/syslog.conf
         if [ $? == 0 ]
         then
-        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf"   $(success)
+        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf" $(success)
         else
         echo "Unable to update /etc/syslog.conf. Fatal Error!" $(failure)
         exit 1
@@ -288,10 +288,10 @@ fi
 if [[ $DOMAIN == "americas" ]]
 then
 
-echo "auth,authpriv.info;user,local4.debug                                $AMERICASDOM" >> /etc/syslog.conf
+echo "auth,authpriv.info;user,local4.debug $AMERICASDOM" >> /etc/syslog.conf
         if [ $? == 0 ]
         then
-        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf"   $(success)
+        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf" $(success)
         else
         echo "Unable to update /etc/syslog.conf. Fatal Error!" $(failure)
         exit 1
@@ -302,10 +302,10 @@ fi
 if [[ $DOMAIN == "africa-me" ]]
 then
 
-echo "auth,authpriv.info;user,local4.debug                                $AFRICAMEDOM" >> /etc/syslog.conf
+echo "auth,authpriv.info;user,local4.debug $AFRICAMEDOM" >> /etc/syslog.conf
         if [ $? == 0 ]
         then
-        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf"   $(success)
+        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf" $(success)
         else
         echo "Unable to update /etc/syslog.conf. Fatal Error!" $(failure)
         exit 1
@@ -317,10 +317,10 @@ fi
 if [[ $DOMAIN == "europe" ]]
 then
 echo Server is in $DOMAIN domain.
-echo "auth,authpriv.info;user,local4.debug                                      $EUROPEDOM" >> /etc/syslog.conf
+echo "auth,authpriv.info;user,local4.debug $EUROPEDOM" >> /etc/syslog.conf
         if [ $? == 0 ]
         then
-        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf"   $(success)
+        echo "Server is in $DOMAIN domain. Updating /etc/syslog.conf" $(success)
         else
         echo "Unable to update /etc/syslog.conf. Fatal Error!" $(failure)
         exit 1
@@ -375,7 +375,7 @@ fi
 }
 
 #########################################################################################
-function  footNote() {
+function footNote() {
 
 echo
 echo
@@ -396,7 +396,7 @@ cp -p /etc/syslog.conf /etc/syslog.conf.bak-CSMC
 cp -p /etc/syslog.conf /etc/syslog.conf.orig
  if [ $? == 0 ]
  then
- echo "Copying /etc/syslog to /etc/syslog.conf.bak-CSMC..."  $(success)
+ echo "Copying /etc/syslog to /etc/syslog.conf.bak-CSMC..." $(success)
  else
  echo "Something is wrong while doing backup /etc/syslog to /etc/syslog.conf.bak-CSMC..." $(failure)
  exit 1
@@ -411,7 +411,7 @@ echo "Restarting syslog..."
 service syslog restart
 if [ $? == 0 ]
 then
-echo "Succesfully restarted..."  $(success)
+echo "Succesfully restarted..." $(success)
 else
 echo "Unable to automatically restart syslog, manual intervention needed..." $(success)
 fi
@@ -434,11 +434,9 @@ function rhel4SyslogCheck () {
 
 ##########################################################################################
 
-function verifyFiles () {
+function verifySyslog () {
 
-checksumSource=`cksum $DIR/syslog.conf`
-checksumTarget=`cksum /etc/syslog.conf`
-
+echo `cat /etc/syslog.conf | grep -C1 CSMC` >> $LOG
 
 }
 
@@ -453,15 +451,29 @@ if [ `grep -c "transport_maps" /etc/postfix/main.cf` == 0 ] ; then /bin/echo "tr
 if [ `grep -c "t-systems.com" /etc/postfix/transport` == 0 ] ; then /bin/echo -e "t-systems.com\tsmtp:$SMTP:25" >> /etc/postfix/transport ; /usr/sbin/postmap /etc/postfix/transport > /dev/null 2>&1 ; MODE2=1
 fi
 
-/etc/init.d/postfix reload > /dev/null 2>&1 ; echo | mutt -s "CSMC installation and configuration completed `hostname -s`" -a "$LOG" "$MAIL" ; sleep 2
+/etc/init.d/postfix reload > /dev/null 2>&1 ; echo | mutt -s "CSMC configured - `hostname -s`" -a "$LOG" "$MAIL" ; sleep 2
 
-if [ $MODE1 == 1 ] ; then sed -i '/transport_maps/d' /etc/postfix/main.cf ;  fi
-if [ $MODE2 == 1 ] ; then sed -i '/t-systems/d' /etc/postfix/transport ;  fi
+if [ $MODE1 == 1 ] ; then sed -i '/transport_maps/d' /etc/postfix/main.cf ; fi
+if [ $MODE2 == 1 ] ; then sed -i '/t-systems/d' /etc/postfix/transport ; fi
 
 }
 
+########################################################################################
+
+function processAfter () {
+
+echo "Process before:" >> $LOG
+ps -ef|grep syslogd >> $LOG
+ps -ef|grep auditd >> $LOG
+}
 
 
+function processAfter () {
+
+echo "Process After:" >> $LOG
+ps -ef|grep syslogd >> $LOG
+ps -ef|grep auditd >> $LOG
+}
 
 ################################## FUNCTIONS ENDS HERE #########################################
 
@@ -469,15 +481,19 @@ if [ $MODE2 == 1 ] ; then sed -i '/t-systems/d' /etc/postfix/transport ;  fi
 
 ############################# SCRIPT EXECUTE STARTS HERE ######################################
 
+
 rm -rf $LOG
 
 VERSION=`cat /etc/shell-release | cut -d" " -f1|cut -c1-5`
 if [[ $VERSION == "rhel5" ]]
      then
       echo
-      echo "!!!!!!!!!!!!! System is RHEL5 - `hostname` !!!!!!!!!!!!!!!!"
+echo "!!!!!!!!!!!!! System is RHEL5 - `hostname` !!!!!!!!!!!!!!!!"
 if [[ $EUID -eq 0 ]];
 then
+
+ps -ef|grep auditd >> $LOG
+
 
 #Disclaimer Note
 disclaimerNote
@@ -491,12 +507,12 @@ while getopts ":ha:p:d:r:" OPTION; do
         case $OPTION in
         "h")
                 echo "Usage : $0
-                 -h : print this help
-                 -a : audispd.conf file
-                 -p : syslog.conf for plugins.d file
-                 -d : auditd.conf file
-                 -r : audit.rules file
-                 eg: ./csmc.sh -a <audispd.conf_filename> -p <syslog.conf_filename> -d <auditd.conf_filename> -r <audit.rules_filename>"
+-h : print this help
+-a : audispd.conf file
+-p : syslog.conf for plugins.d file
+-d : auditd.conf file
+-r : audit.rules file
+eg: ./csmc.sh -a <audispd.conf_filename> -p <syslog.conf_filename> -d <auditd.conf_filename> -r <audit.rules_filename>"
                 exit 0
                 ;;
         "a")
@@ -519,6 +535,9 @@ while getopts ":ha:p:d:r:" OPTION; do
                 ;;
         esac
 done
+
+#processes before
+processBefore
 
 #Checking input files existance
 inputVerify
@@ -547,11 +566,16 @@ verifyDaemon
 #Just a footnote
 footNote
 
+#Verify CSMC gateway
+verifySyslog
+
+#process after
+processAfter
+
 #Send Mail
 mailTo
 
 
-echo "DONE" >> $LOG
 
 else
 echo "Run this script as root" $(failure)
@@ -590,9 +614,8 @@ fi
 
 
 
-echo   "!!!!!!!!!!!!!!!!!!!!!!!!!! Script Finished on `hostname` !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!! Script Finished on `hostname` !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 
 
 ############################# SCRIPT EXECUTE ENDS HERE ######################################
-
 
