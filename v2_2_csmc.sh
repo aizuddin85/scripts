@@ -25,6 +25,8 @@ AFRICAMEDOM="@x.x.x.x"
 DIR=`pwd`
 SMTP=
 MAIL=
+LOG="/tmp/csmc_install.log"
+
 ################################# FUNCTIONS START ######################################
 
 
@@ -85,7 +87,10 @@ fi
 
 #########################################################################################
 function preBackup () {
-echo "++++ PRE-INSTALLATION BACKUP ++++"
+echo "++++ PRE-INSTALLATION BACKUP ++++" 
+echo "Pre-Installation Backup" >> $LOG
+ls -lrt /etc/audisp/audispd.conf >> $LOG
+
 if [ -a /etc/audisp/audispd.conf ]
 then
         cp -p /etc/audisp/audispd.conf /etc/audisp/audispd.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
@@ -97,6 +102,8 @@ then
         fi
 fi
 
+
+ls -lrt /etc/audisp/plugins.d/syslog.conf >> $LOG
 if [ -a /etc/audisp/plugins.d/syslog.conf ]
 then
         cp -p /etc/audisp/plugins.d/syslog.conf /etc/audisp/plugins.d/syslog.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
@@ -108,7 +115,7 @@ then
         fi
 fi
 
-
+ls -lrt /etc/audit/auditd.conf >> $LOG
 if [ -a /etc/audit/auditd.conf ]
 then
         cp -p /etc/audit/auditd.conf /etc/audit/auditd.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
@@ -120,6 +127,8 @@ then
         fi
 fi
 
+
+ls -lrt /etc/audit/audit.rules >> $LOG
 if [ -a /etc/audit/audit.rules ]
 then
         cp -p /etc/audit/audit.rules /etc/audit/audit.rules.bak-CSMC-`hostname`-`date +%H-%M-%S`
@@ -132,6 +141,7 @@ then
 fi
 
 
+ls -lrt /etc/syslog.conf >> $LOG
 if [ -a /etc/syslog.conf ]
 then
         cp -p /etc/syslog.conf /etc/syslog.conf.bak-CSMC-`hostname`-`date +%H-%M-%S`
@@ -154,6 +164,7 @@ fi
 
 function packageInstall () {
 echo
+echo "Package Installation.." >> $LOG
 echo "++++ PACKAGES INSTALLATION ++++"
 rpm -qa|grep "audit-1.8" > /dev/null 2>&1
 if  [ $? -gt 0 ]
@@ -183,6 +194,7 @@ fi
 function preconfigBackup () {
 
 echo
+echo "Pre-config Backup.."  >> $LOG
 echo "++++ PRE-CONFIG BACKUP ++++"
 cp -p /etc/audisp/audispd.conf /etc/audisp/audispd.conf_orig_`hostname`-`date +%H-%M-%S`
 cp -p /etc/audisp/plugins.d/syslog.conf /etc/audisp/plugins.d/syslog.conf_orig_`hostname`-`date +%H-%M-%S`
@@ -195,7 +207,9 @@ echo "Backup done ..." $(success)
 
 function postConfig () {
 echo
+echo "Deploying config files.." >> $LOG
 echo "++++ DEPLOYING CONFIGURATION FILES ++++ "
+
 cat $AUDISPD > /etc/audisp/audispd.conf
         if [ $? -eq 0 ]
         then
@@ -242,6 +256,7 @@ cat $AUDITRULES > /etc/audit/audit.rules
 function gatewaySyslog () {
 
 echo
+echo "Configuring CSMC Gateway IP.." >> $LOG
 echo "++++ CONFIGURING SYSLOG CSMC GATEWAY ++++"
 
 #Make sure original file restored if this script is re-run
@@ -317,6 +332,7 @@ fi
 function restartDaemon () {
 
 echo
+echo "Restarting daemon.." >> $LOG
 echo "++++ RESTARTING AUDITD & SYSLOG ++++"
 service auditd restart
 if [ $? -gt 0 ]
@@ -337,6 +353,7 @@ fi
 function verifyDaemon () {
 
 echo
+echo "Verifying daemon.." >> $LOG
 echo "++++ VERIFYING AUDITD AND SYSLOG SERVICE ++++"
 AUDITDPID=`pidof auditd`
 SYSLOGPID=`pidof syslogd`
@@ -436,7 +453,7 @@ if [ `grep -c "transport_maps" /etc/postfix/main.cf` == 0 ] ; then /bin/echo "tr
 if [ `grep -c "t-systems.com" /etc/postfix/transport` == 0 ] ; then /bin/echo -e "t-systems.com\tsmtp:$SMTP:25" >> /etc/postfix/transport ; /usr/sbin/postmap /etc/postfix/transport > /dev/null 2>&1 ; MODE2=1
 fi
 
-/etc/init.d/postfix reload > /dev/null 2>&1 ; echo | mutt -s "CSMC installation and configuration completed `hostname -s`" "$MAIL" ; sleep 2
+/etc/init.d/postfix reload > /dev/null 2>&1 ; echo | mutt -s "CSMC installation and configuration completed `hostname -s`" -a "$LOG" "$MAIL" ; sleep 2
 
 if [ $MODE1 == 1 ] ; then sed -i '/transport_maps/d' /etc/postfix/main.cf ;  fi
 if [ $MODE2 == 1 ] ; then sed -i '/t-systems/d' /etc/postfix/transport ;  fi
@@ -452,6 +469,7 @@ if [ $MODE2 == 1 ] ; then sed -i '/t-systems/d' /etc/postfix/transport ;  fi
 
 ############################# SCRIPT EXECUTE STARTS HERE ######################################
 
+rm -rf $LOG
 
 VERSION=`cat /etc/shell-release | cut -d" " -f1|cut -c1-5`
 if [[ $VERSION == "rhel5" ]]
@@ -533,12 +551,16 @@ footNote
 mailTo
 
 
+echo "DONE" >> $LOG
+
 else
 echo "Run this script as root" $(failure)
 fi
 
 
 ############################# RHEL4 SCRIPT EXECUTE STARTS HERE ######################################
+rm -rf $LOG
+
 elif [[ $VERSION == "rhel4" ]]
 then
 
