@@ -436,7 +436,7 @@ if [ `grep -c "transport_maps" /etc/postfix/main.cf` == 0 ] ; then /bin/echo "tr
 if [ `grep -c "t-systems.com" /etc/postfix/transport` == 0 ] ; then /bin/echo -e "t-systems.com\tsmtp:$SMTP:25" >> /etc/postfix/transport ; /usr/sbin/postmap /etc/postfix/transport > /dev/null 2>&1 ; MODE2=1
 fi
 
-/etc/init.d/postfix reload > /dev/null 2>&1 ; echo | mutt -s "CSMC installation and configuration completed" "$MAIL" ; sleep 2
+/etc/init.d/postfix reload > /dev/null 2>&1 ; echo | mutt -s "CSMC installation and configuration completed `hostname -s`" "$MAIL" ; sleep 2
 
 if [ $MODE1 == 1 ] ; then sed -i '/transport_maps/d' /etc/postfix/main.cf ;  fi
 if [ $MODE2 == 1 ] ; then sed -i '/t-systems/d' /etc/postfix/transport ;  fi
