@@ -412,11 +412,17 @@ function rhel4SyslogCheck () {
 
 }
 
+
+
+
+
 ################################## FUNCTIONS ENDS HERE #########################################
 
 
 
 ############################# SCRIPT EXECUTE STARTS HERE ######################################
+
+
 VERSION=`cat /etc/shell-release | cut -d" " -f1|cut -c1-5`
 if [[ $VERSION == "rhel5" ]]
      then
@@ -492,7 +498,6 @@ verifyDaemon
 
 #Just a footnote
 footNote
-
 
 
 
