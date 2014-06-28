@@ -462,7 +462,6 @@ footNote
 else
 echo "Run this script as root" $(failure)
 fi
-
 echo   "Script Finished."
 
 

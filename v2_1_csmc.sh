@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #This script for CSMC Roll-Out for Linux Box
 #Written by mymzbe - 10th May 2014 - GLUX
@@ -10,7 +9,7 @@
 #Added failsafe features for config files
 #Added user check boolean
 #Using variables for csmc gateway IP
-##Version 2.1## -20th May 2014
+##Version 2.0.1## -20th May 2014
 #Bugs on VERSION check, adjusted detect . & -
 ##Version2.1## -27th May 2014
 #RHEL4 Support added
@@ -18,10 +17,10 @@
 
 ################################# VARIABLES START ######################################
 
-ASIAPACDOM="@156.31.191.88"
-AMERICASDOM="@138.57.147.118"
-EUROPEDOM="@145.59.200.215"
-AFRICAMEDOM="@145.59.200.215"
+ASIAPACDOM="@x.x.x.x"
+AMERICASDOM="@x.x.x.x"
+EUROPEDOM="@x.x.x.x"
+AFRICAMEDOM="@x.x.x.x"
 
 ################################# FUNCTIONS START ######################################
 
@@ -532,7 +531,7 @@ rhel4SyslogCheck
 
 fi
 
-fi
+
 
 
 echo   "!!!!!!!!!!!!!!!!!!!!!!!!!! Script Finished on `hostname` !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
