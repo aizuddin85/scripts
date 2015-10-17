@@ -2,7 +2,7 @@
 
 cpu=`lscpu | grep "^Core(s)" | awk '{print $4}'`
 mem=`free -m | grep Mem | awk '{print $2}'`
-disk=`df -h /var/lib/libvirt/images/ | grep mapper | awk '{print $4}'`
+disk=`df -h /var | grep md | awk '{print $4}'`
 
 read -p "Enter the hostname (this will be created as disk image name as well) :" hostname
 read -p "Enter maximum CPU count (max $cpu) :" cpucount
@@ -18,30 +18,29 @@ echo "Disk size: $disksize"
 echo "Memory size: $memsize MB"
 echo "IP Address: $ip"
 echo
-read -p "Continue [Yes/No}? " input
+read -p "Continue [Yes/No]? " input
 
-if [ $input == "Yes" ]; then
-	if [ $cpucount -gt $cpu ]; then
-		echo "CPU Count is greater then available core. Terminating..."
-		exit 1
-	elif [ $memsize -gt $mem ]; then
-		echo "Memory size is greater than available memory. Terminating..."
-		exit 1
-	elif [ $disksize -gt $disk ]; then
-		echo "Disk size is greater then available space. Terminating..."
-		exit 1
-	else
-		echo "Parameters OK. Continue..."	
-	fi
+if [[ $input =~ ^[Yy]es$ ]]; then
+        if [ $cpucount -gt $cpu ]; then
+                echo "CPU Count is greater then available core. Terminating..."
+                exit 1
+        elif [ $memsize -gt $mem ]; then
+                echo "Memory size is greater than available memory. Terminating..."
+                exit 1
+        elif [ $disksize -gt $disk ]; then
+                echo "Disk size is greater then available space. Terminating..."
+                exit 1
+        else
+                echo "Parameters OK. Continue..."       
+        fi
 
-elif [ $input == "No" ]; then
-	echo "Terminating..."
-	exit 1
+elif [[ $input =~ ^[Nn]o$ ]]; then
+        echo "Terminating..."
+        exit 1
 else
-	echo "Wrong input. Please enter Yes or No! Exiting."
-	exit 1
+        echo "Wrong input. Please enter Yes or No! Exiting."
+        exit 1
 fi
-
 
 echo "Creating qcow2 image of $disksize for $hostname"
 cd /var/lib/libvirt/images/
